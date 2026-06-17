@@ -174,12 +174,7 @@
                     { id: 'athletic', source: 'NFL', title: 'The Athletic: NFL Coverage', url: 'https://www.nytimes.com/athletic/nfl/' },
                 ];
 
-                if (isSaturday) {
-                    const dacosta = { id: 'dacosta', source: 'Newsletter', title: 'Da Costa a Costa: La newsletter di Francesco Costa', url: 'https://www.ilpost.it/newsletter/da-costa-a-costa/' };
-                    const ilpost = base.find(h => h.id === 'ilpost');
-                    const athletic = base.find(h => h.id === 'athletic');
-                    const others = base.filter(h => h.id !== 'ilpost' && h.id !== 'athletic');
-                    return [dacosta, ilpost, ...others, athletic];
+                
                 }
                 return base;
             };
