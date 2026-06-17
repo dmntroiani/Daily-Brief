@@ -212,12 +212,12 @@
         });
     }
 
-    return base;
+   return base;
 };
 
-            const [headlines, setHeadlines] = useState(() => {
-                const saved = localStorage.getItem('headlines_v5');
-                return saved ? JSON.parse(saved) : getInitialHeadlines();
+const App = () => {
+
+    const [headlines, setHeadlines] = useState(() => {
             });
 
             const [note, setNote] = useState(() => localStorage.getItem('morning_note') || '');
