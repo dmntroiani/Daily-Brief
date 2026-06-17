@@ -4,20 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Brief</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- React & ReactDOM -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <!-- Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <link rel="icon" type="image/png" href="./favicon.png">
-<link rel="apple-touch-icon" href="./apple-touch-icon.png">
-    
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+
     <style>
         body {
             background-color: #F5F5F0;
@@ -26,7 +21,7 @@
         }
         .font-serif { font-family: 'Playfair Display', serif; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
-        
+
         .editorial-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -34,7 +29,7 @@
             background-color: #1A1A1A;
             border: 1px solid #1A1A1A;
         }
-        
+
         .editorial-card {
             background-color: white;
             transition: all 0.3s ease;
@@ -42,28 +37,45 @@
         .editorial-card:hover {
             background-color: #FDFDFB;
         }
-        
-        /* Custom scrollbar */
-        textarea::-webkit-scrollbar {
-            width: 4px;
-        }
-        textarea::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        textarea::-webkit-scrollbar-thumb {
-            background: #1A1A1A20;
-        }
+
+        textarea::-webkit-scrollbar { width: 4px; }
+        textarea::-webkit-scrollbar-track { background: transparent; }
+        textarea::-webkit-scrollbar-thumb { background: #1A1A1A20; }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useMemo } = React;
+        const { useState, useEffect } = React;
 
+        /* ── Dati iniziali ── */
+        const getInitialHeadlines = () => {
+            const isSaturday = new Date().getDay() === 6;
+
+            const base = [
+                { id: 'corriere',    source: 'Corriere della Sera', title: 'Corriere della Sera – ultime notizie',       url: 'https://www.corriere.it/' },
+                { id: 'repubblica',  source: 'La Repubblica',        title: 'La Repubblica – news e approfondimenti',     url: 'https://www.repubblica.it/' },
+                { id: 'sole24ore',   source: 'Il Sole 24 Ore',       title: 'Il Sole 24 Ore – economia e finanza',        url: 'https://www.ilsole24ore.com/' },
+                { id: 'ilpost',      source: 'Il Post',              title: 'Il Post – notizie spiegate bene',            url: 'https://www.ilpost.it/' },
+            ];
+
+            if (isSaturday) {
+                base.push({
+                    id: 'weekend',
+                    source: 'Weekend',
+                    title: 'Letture del fine settimana',
+                    url: 'https://www.ilpost.it/'
+                });
+            }
+
+            return base;
+        };
+
+        /* ── HeadlineCard ── */
         const HeadlineCard = ({ headline, onDelete }) => {
             const displayTitle = headline.title.split(':')[0].trim();
-            
+
             return (
                 <div className="editorial-card group relative flex flex-col h-full min-h-[120px] md:min-h-[200px] p-4 md:p-8">
                     <div className="flex justify-between items-start mb-2 md:mb-4">
@@ -77,7 +89,7 @@
                             <i data-lucide="trash-2" style={{width: '12px', height: '12px'}}></i>
                         </button>
                     </div>
-                    
+
                     <h3 className="font-serif text-sm md:text-2xl leading-tight mb-2 md:mb-6 flex-grow group-hover:italic transition-all line-clamp-3">
                         <a href={headline.url} target="_blank" rel="noopener noreferrer" className="hover:underline decoration-1 underline-offset-2 md:underline-offset-4">
                             {displayTitle}
@@ -93,29 +105,29 @@
             );
         };
 
-        const Notepad = ({ value, onChange }) => {
-            return (
-                <div className="bg-white border border-black/10 p-8 shadow-sm">
-                    <div className="flex items-center gap-3 mb-6 border-b border-black/5 pb-4">
-                        <i data-lucide="sticky-note" className="text-black/40"></i>
-                        <h2 className="font-serif text-xl italic">Riflessioni del Mattino</h2>
-                    </div>
-                    <textarea
-                        value={value}
-                        onChange={(e) => onChange(e.target.value)}
-                        placeholder="Scrivi qualcosa..."
-                        className="w-full h-[300px] resize-none bg-transparent font-sans text-lg leading-relaxed focus:outline-none placeholder:text-black/20"
-                    />
-                    <div className="mt-4 text-[10px] font-mono text-black/30 uppercase tracking-widest">
-                        Salvataggio automatico locale
-                    </div>
+        /* ── Notepad ── */
+        const Notepad = ({ value, onChange }) => (
+            <div className="bg-white border border-black/10 p-8 shadow-sm">
+                <div className="flex items-center gap-3 mb-6 border-b border-black/5 pb-4">
+                    <i data-lucide="sticky-note" className="text-black/40"></i>
+                    <h2 className="font-serif text-xl italic">Riflessioni del Mattino</h2>
                 </div>
-            );
-        };
+                <textarea
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    placeholder="Scrivi qualcosa..."
+                    className="w-full h-[300px] resize-none bg-transparent font-sans text-lg leading-relaxed focus:outline-none placeholder:text-black/20"
+                />
+                <div className="mt-4 text-[10px] font-mono text-black/30 uppercase tracking-widest">
+                    Salvataggio automatico locale
+                </div>
+            </div>
+        );
 
+        /* ── AddHeadlineModal ── */
         const AddHeadlineModal = ({ isOpen, onClose, onAdd }) => {
-            const [title, setTitle] = useState('');
-            const [url, setUrl] = useState('');
+            const [title, setTitle]   = useState('');
+            const [url, setUrl]       = useState('');
             const [source, setSource] = useState('');
 
             if (!isOpen) return null;
@@ -161,53 +173,14 @@
             );
         };
 
-      const getInitialHeadlines = () => {
-    const isSaturday = new Date().getDay() === 6;
-
-    const base = [
-        // ...
-    ];
-
-    if (isSaturday) {
-        base.push({
-            id: 'weekend',
-            source: 'Weekend',
-            title: 'Letture del fine settimana',
-            url: 'https://www.ilpost.it/'
-        });
-    }
-
-    return base;
-};
-
-const App = () => {
-
-    const [headlines, setHeadlines] = useState(() => {
-        const saved = localStorage.getItem('headlines_v5');
-        return saved ? JSON.parse(saved) : getInitialHeadlines();
-    });
-
-    const [note, setNote] = useState(() =>
-        localStorage.getItem('morning_note') || ''
-    );
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [currentTime, setCurrentTime] = useState(new Date());
-
-    // ... tutto il resto del tuo codice ...
-
-    return (
-        <div className="min-h-screen pb-20">
-            ...
-        </div>
-    );
-};
-const App = () => {
-
-    const [headlines, setHeadlines] = useState(() => {
+        /* ── App ── */
+        const App = () => {
+            const [headlines, setHeadlines] = useState(() => {
+                const saved = localStorage.getItem('headlines_v5');
+                return saved ? JSON.parse(saved) : getInitialHeadlines();
             });
 
-            const [note, setNote] = useState(() => localStorage.getItem('morning_note') || '');
+            const [note, setNote]           = useState(() => localStorage.getItem('morning_note') || '');
             const [isModalOpen, setIsModalOpen] = useState(false);
             const [currentTime, setCurrentTime] = useState(new Date());
 
