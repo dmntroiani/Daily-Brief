@@ -4,20 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Brief</title>
-    <script src="https://cdn.tailwindcss.com/3.4.1"></script>
-<script src="https://unpkg.com/lucide@0.383.0/dist/umd/lucide.js"></script>
-<script src="https://unpkg.com/@babel/standalone@7.23.10/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.383.0/dist/umd/lucide.js"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.23.10/babel.min.js"></script>
     <link rel="icon" type="image/png" href="./favicon.png">
     <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 
     <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
             background-color: #F5F5F0;
             color: #1A1A1A;
             font-family: 'Inter', sans-serif;
+            min-height: 100vh;
         }
-        .font-serif { font-family: 'Playfair Display', serif; }
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* ── Typography ── */
+        .font-serif  { font-family: 'Playfair Display', serif; }
+        .font-mono   { font-family: 'JetBrains Mono', monospace; }
+        .italic      { font-style: italic; }
+        .font-bold   { font-weight: 700; }
+        .font-normal { font-weight: 400; }
+        .uppercase   { text-transform: uppercase; }
+
+        /* ── Layout helpers ── */
+        .min-h-screen { min-height: 100vh; }
+        .pb-20        { padding-bottom: 5rem; }
+
+        .max-w-7xl {
+            max-width: 80rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .px-6  { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .pt-8  { padding-top: 2rem; }
+        .pb-8  { padding-bottom: 2rem; }
+        .mt-6  { margin-top: 1.5rem; }
+        .mt-24 { margin-top: 6rem; }
+        .pt-8  { padding-top: 2rem; }
+        .mb-8  { margin-bottom: 2rem; }
+        .mb-6  { margin-bottom: 1.5rem; }
+        .mb-4  { margin-bottom: 1rem; }
+        .mb-2  { margin-bottom: 0.5rem; }
+        .mt-4  { margin-top: 1rem; }
+        .mt-auto { margin-top: auto; }
+        .pt-2  { padding-top: 0.5rem; }
+        .p-4   { padding: 1rem; }
+        .p-8   { padding: 2rem; }
+        .p-1   { padding: 0.25rem; }
+        .mr-2  { margin-right: 0.5rem; }
+
+        /* ── Flex ── */
+        .flex           { display: flex; }
+        .flex-col       { flex-direction: column; }
+        .flex-grow      { flex-grow: 1; }
+        .items-start    { align-items: flex-start; }
+        .items-end      { align-items: flex-end; }
+        .items-center   { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2   { gap: 0.5rem; }
+        .gap-3   { gap: 0.75rem; }
+        .gap-8   { gap: 2rem; }
+        .gap-12  { gap: 3rem; }
+        .gap-1   { gap: 0.25rem; }
+        .space-y-4 > * + * { margin-top: 1rem; }
+        .space-y-6 > * + * { margin-top: 1.5rem; }
+        .space-y-8 > * + * { margin-top: 2rem; }
+
+        /* ── Grid ── */
+        .grid { display: grid; }
 
         .editorial-grid {
             display: grid;
@@ -27,17 +85,412 @@
             border: 1px solid #1A1A1A;
         }
 
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+        }
+
+        @media (min-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        /* ── Header ── */
+        header {
+            border-bottom: 1px solid rgba(26,26,26,0.1);
+        }
+
+        .header-inner {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .header-inner {
+                flex-direction: row;
+                align-items: flex-end;
+            }
+            .header-right {
+                align-items: flex-end !important;
+            }
+        }
+
+        .header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        h1.title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3.5rem, 8vw, 6rem);
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            line-height: 1;
+        }
+
+        @media (min-width: 768px) {
+            h1.title { font-size: clamp(5rem, 10vw, 8rem); }
+        }
+
+        .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: rgba(26,26,26,0.4);
+        }
+
+        .eyebrow span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+        }
+
+        .time-display {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: rgba(26,26,26,0.6);
+        }
+
+        .date-display {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 14px;
+            color: rgba(26,26,26,0.4);
+        }
+
+        /* ── Section labels ── */
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            color: rgba(26,26,26,0.4);
+        }
+
+        /* ── Add button ── */
+        .add-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #1A1A1A;
+            transition: color 0.2s;
+        }
+        .add-btn:hover { color: rgba(26,26,26,0.5); }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        /* ── Editorial Card ── */
         .editorial-card {
             background-color: white;
-            transition: all 0.3s ease;
+            transition: background-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            min-height: 120px;
+            padding: 1rem;
+            position: relative;
         }
-        .editorial-card:hover {
-            background-color: #FDFDFB;
+
+        @media (min-width: 768px) {
+            .editorial-card { min-height: 200px; padding: 2rem; }
+        }
+
+        .editorial-card:hover { background-color: #FDFDFB; }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .card-top { margin-bottom: 1rem; }
+        }
+
+        .card-source {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(0,0,0,0.4);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-right: 0.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .card-source { font-size: 10px; letter-spacing: 0.2em; }
+        }
+
+        .delete-btn {
+            opacity: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            color: #1A1A1A;
+            transition: opacity 0.2s, color 0.2s;
+            flex-shrink: 0;
+        }
+        .editorial-card:hover .delete-btn { opacity: 1; }
+        .delete-btn:hover { color: #dc2626; }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
+            line-height: 1.3;
+            margin-bottom: 0.5rem;
+            flex-grow: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: font-style 0.2s;
+        }
+
+        @media (min-width: 768px) {
+            .card-title { font-size: 1.5rem; margin-bottom: 1.5rem; }
+        }
+
+        .editorial-card:hover .card-title { font-style: italic; }
+
+        .card-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .card-title a:hover {
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 4px;
+        }
+
+        .card-link {
+            margin-top: auto;
+            padding-top: 0.5rem;
+        }
+
+        .card-link a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 8px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: rgba(0,0,0,0.6);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        @media (min-width: 768px) { .card-link a { font-size: 11px; } }
+        .card-link a:hover { color: #1A1A1A; }
+
+        /* ── Notepad ── */
+        .notepad {
+            background: white;
+            border: 1px solid rgba(26,26,26,0.1);
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .notepad-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(26,26,26,0.05);
+            padding-bottom: 1rem;
+            color: rgba(26,26,26,0.4);
+        }
+
+        .notepad-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-style: italic;
+            font-weight: 400;
+            color: #1A1A1A;
+        }
+
+        .notepad textarea {
+            width: 100%;
+            height: 300px;
+            resize: none;
+            background: transparent;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.125rem;
+            line-height: 1.7;
+            border: none;
+            outline: none;
+            color: #1A1A1A;
+        }
+        .notepad textarea::placeholder { color: rgba(26,26,26,0.2); }
+
+        .notepad-footer {
+            margin-top: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: rgba(26,26,26,0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
         }
 
         textarea::-webkit-scrollbar { width: 4px; }
         textarea::-webkit-scrollbar-track { background: transparent; }
-        textarea::-webkit-scrollbar-thumb { background: #1A1A1A20; }
+        textarea::-webkit-scrollbar-thumb { background: rgba(26,26,26,0.12); }
+
+        /* ── Ritual box ── */
+        .ritual-box {
+            padding: 2rem;
+            background: #1A1A1A;
+            color: white;
+        }
+        .ritual-box h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            font-style: italic;
+            font-weight: 400;
+        }
+        .ritual-box p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.7;
+        }
+
+        /* ── Modal ── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-box {
+            position: relative;
+            width: 100%;
+            max-width: 28rem;
+            background: white;
+            padding: 2rem;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: rgba(26,26,26,0.4);
+            padding: 0.25rem;
+            transition: color 0.2s;
+        }
+        .modal-close:hover { color: #1A1A1A; }
+
+        .form-group { margin-bottom: 1.5rem; }
+
+        .form-group label {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: rgba(26,26,26,0.4);
+            margin-bottom: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .form-group input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid rgba(26,26,26,0.2);
+            padding: 0.5rem 0;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            background: transparent;
+            outline: none;
+            color: #1A1A1A;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus { border-color: #1A1A1A; }
+
+        .submit-btn {
+            width: 100%;
+            background: #1A1A1A;
+            color: white;
+            padding: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-size: 12px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .submit-btn:hover { background: rgba(26,26,26,0.8); }
+
+        /* ── Footer ── */
+        footer {
+            border-top: 1px solid rgba(26,26,26,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: rgba(26,26,26,0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
     </style>
 </head>
 <body>
@@ -49,53 +502,34 @@
         /* ── Dati iniziali ── */
         const getInitialHeadlines = () => {
             const isSaturday = new Date().getDay() === 6;
-
             const base = [
-                { id: 'corriere',    source: 'Corriere della Sera', title: 'Corriere della Sera – ultime notizie',       url: 'https://www.corriere.it/' },
-                { id: 'repubblica',  source: 'La Repubblica',        title: 'La Repubblica – news e approfondimenti',     url: 'https://www.repubblica.it/' },
-                { id: 'sole24ore',   source: 'Il Sole 24 Ore',       title: 'Il Sole 24 Ore – economia e finanza',        url: 'https://www.ilsole24ore.com/' },
-                { id: 'ilpost',      source: 'Il Post',              title: 'Il Post – notizie spiegate bene',            url: 'https://www.ilpost.it/' },
+                { id: 'corriere',   source: 'Corriere della Sera', title: 'Corriere della Sera – ultime notizie',   url: 'https://www.corriere.it/' },
+                { id: 'repubblica', source: 'La Repubblica',        title: 'La Repubblica – news e approfondimenti', url: 'https://www.repubblica.it/' },
+                { id: 'sole24ore',  source: 'Il Sole 24 Ore',       title: 'Il Sole 24 Ore – economia e finanza',    url: 'https://www.ilsole24ore.com/' },
+                { id: 'ilpost',     source: 'Il Post',              title: 'Il Post – notizie spiegate bene',        url: 'https://www.ilpost.it/' },
             ];
-
-            if (isSaturday) {
-                base.push({
-                    id: 'weekend',
-                    source: 'Weekend',
-                    title: 'Letture del fine settimana',
-                    url: 'https://www.ilpost.it/'
-                });
-            }
-
+            if (isSaturday) base.push({ id: 'weekend', source: 'Weekend', title: 'Letture del fine settimana', url: 'https://www.ilpost.it/' });
             return base;
         };
 
         /* ── HeadlineCard ── */
         const HeadlineCard = ({ headline, onDelete }) => {
             const displayTitle = headline.title.split(':')[0].trim();
-
             return (
-                <div className="editorial-card group relative flex flex-col h-full min-h-[120px] md:min-h-[200px] p-4 md:p-8">
-                    <div className="flex justify-between items-start mb-2 md:mb-4">
-                        <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.1em] md:tracking-[0.2em] text-black/40 font-mono truncate mr-2">
-                            {headline.source}
-                        </span>
-                        <button
-                            onClick={() => onDelete(headline.id)}
-                            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:text-red-600"
-                        >
-                            <i data-lucide="trash-2" style={{width: '12px', height: '12px'}}></i>
+                <div className="editorial-card">
+                    <div className="card-top">
+                        <span className="card-source">{headline.source}</span>
+                        <button className="delete-btn" onClick={() => onDelete(headline.id)}>
+                            <i data-lucide="trash-2" style={{width:'12px',height:'12px'}}></i>
                         </button>
                     </div>
-
-                    <h3 className="font-serif text-sm md:text-2xl leading-tight mb-2 md:mb-6 flex-grow group-hover:italic transition-all line-clamp-3">
-                        <a href={headline.url} target="_blank" rel="noopener noreferrer" className="hover:underline decoration-1 underline-offset-2 md:underline-offset-4">
-                            {displayTitle}
-                        </a>
+                    <h3 className="card-title">
+                        <a href={headline.url} target="_blank" rel="noopener noreferrer">{displayTitle}</a>
                     </h3>
-
-                    <div className="mt-auto pt-2 flex items-center text-[8px] md:text-[11px] font-medium uppercase tracking-widest text-black/60">
-                        <a href={headline.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 md:gap-2 hover:text-black transition-colors">
-                            <span>Leggi</span> <i data-lucide="external-link" style={{width: '10px', height: '10px'}}></i>
+                    <div className="card-link">
+                        <a href={headline.url} target="_blank" rel="noopener noreferrer">
+                            <span>Leggi</span>
+                            <i data-lucide="external-link" style={{width:'10px',height:'10px'}}></i>
                         </a>
                     </div>
                 </div>
@@ -104,20 +538,17 @@
 
         /* ── Notepad ── */
         const Notepad = ({ value, onChange }) => (
-            <div className="bg-white border border-black/10 p-8 shadow-sm">
-                <div className="flex items-center gap-3 mb-6 border-b border-black/5 pb-4">
-                    <i data-lucide="sticky-note" className="text-black/40"></i>
-                    <h2 className="font-serif text-xl italic">Riflessioni del Mattino</h2>
+            <div className="notepad">
+                <div className="notepad-header">
+                    <i data-lucide="sticky-note" style={{width:'18px',height:'18px'}}></i>
+                    <h2>Riflessioni del Mattino</h2>
                 </div>
                 <textarea
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     placeholder="Scrivi qualcosa..."
-                    className="w-full h-[300px] resize-none bg-transparent font-sans text-lg leading-relaxed focus:outline-none placeholder:text-black/20"
                 />
-                <div className="mt-4 text-[10px] font-mono text-black/30 uppercase tracking-widest">
-                    Salvataggio automatico locale
-                </div>
+                <div className="notepad-footer">Salvataggio automatico locale</div>
             </div>
         );
 
@@ -139,31 +570,29 @@
             };
 
             return (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose}></div>
-                    <div className="relative w-full max-w-md bg-white p-8 shadow-2xl">
-                        <div className="flex justify-between items-center mb-6">
-                            <h2 className="font-serif text-2xl italic">Aggiungi Testata</h2>
-                            <button onClick={onClose} className="text-black/40 hover:text-black">
-                                <i data-lucide="x"></i>
+                <div className="modal-overlay">
+                    <div className="modal-backdrop" onClick={onClose}></div>
+                    <div className="modal-box">
+                        <div className="modal-header">
+                            <h2>Aggiungi Testata</h2>
+                            <button className="modal-close" onClick={onClose}>
+                                <i data-lucide="x" style={{width:'20px',height:'20px'}}></i>
                             </button>
                         </div>
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div>
-                                <label className="block text-[10px] font-bold uppercase tracking-widest text-black/40 mb-2">Nome Testata</label>
-                                <input type="text" required value={source} onChange={(e) => setSource(e.target.value)} className="w-full border-b border-black/20 py-2 focus:outline-none focus:border-black" />
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label>Nome Testata</label>
+                                <input type="text" required value={source} onChange={(e) => setSource(e.target.value)} />
                             </div>
-                            <div>
-                                <label className="block text-[10px] font-bold uppercase tracking-widest text-black/40 mb-2">Titolo</label>
-                                <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} className="w-full border-b border-black/20 py-2 focus:outline-none focus:border-black" />
+                            <div className="form-group">
+                                <label>Titolo</label>
+                                <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} />
                             </div>
-                            <div>
-                                <label className="block text-[10px] font-bold uppercase tracking-widest text-black/40 mb-2">URL</label>
-                                <input type="url" required value={url} onChange={(e) => setUrl(e.target.value)} className="w-full border-b border-black/20 py-2 focus:outline-none focus:border-black" />
+                            <div className="form-group">
+                                <label>URL</label>
+                                <input type="url" required value={url} onChange={(e) => setUrl(e.target.value)} />
                             </div>
-                            <button type="submit" className="w-full bg-black text-white py-4 font-bold uppercase tracking-widest text-xs hover:bg-black/80">
-                                Aggiungi alla Dashboard
-                            </button>
+                            <button type="submit" className="submit-btn">Aggiungi alla Dashboard</button>
                         </form>
                     </div>
                 </div>
@@ -176,18 +605,12 @@
                 const saved = localStorage.getItem('headlines_v5');
                 return saved ? JSON.parse(saved) : getInitialHeadlines();
             });
-
-            const [note, setNote]           = useState(() => localStorage.getItem('morning_note') || '');
+            const [note, setNote]               = useState(() => localStorage.getItem('morning_note') || '');
             const [isModalOpen, setIsModalOpen] = useState(false);
             const [currentTime, setCurrentTime] = useState(new Date());
 
-            useEffect(() => {
-                localStorage.setItem('headlines_v5', JSON.stringify(headlines));
-            }, [headlines]);
-
-            useEffect(() => {
-                localStorage.setItem('morning_note', note);
-            }, [note]);
+            useEffect(() => { localStorage.setItem('headlines_v5', JSON.stringify(headlines)); }, [headlines]);
+            useEffect(() => { localStorage.setItem('morning_note', note); }, [note]);
 
             useEffect(() => {
                 const timer = setInterval(() => setCurrentTime(new Date()), 60000);
@@ -195,49 +618,47 @@
                 return () => clearInterval(timer);
             }, []);
 
-            useEffect(() => {
-                lucide.createIcons();
-            }, [headlines, isModalOpen]);
+            useEffect(() => { lucide.createIcons(); }, [headlines, isModalOpen]);
 
             const addHeadline = (title, url, source) => {
                 const newH = { id: Math.random().toString(36).substr(2, 9), title, url, source };
                 setHeadlines([newH, ...headlines]);
             };
-
             const deleteHeadline = (id) => setHeadlines(headlines.filter(h => h.id !== id));
 
             return (
                 <div className="min-h-screen pb-20">
-                    <header className="max-w-7xl mx-auto px-6 pt-8 pb-8 border-b border-black/10">
-                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                    <header className="max-w-7xl px-6 pt-8 pb-8">
+                        <div className="header-inner">
                             <div className="space-y-4">
-                                <div className="flex items-center gap-3 text-black/40">
-                                    <i data-lucide="newspaper" style={{width: '20px'}}></i>
-                                    <span className="text-[10px] font-bold uppercase tracking-[0.3em] font-mono">Edizione Mattutina</span>
+                                <div className="eyebrow">
+                                    <i data-lucide="newspaper" style={{width:'20px',height:'20px'}}></i>
+                                    <span>Edizione Mattutina</span>
                                 </div>
-                                <h1 className="text-6xl md:text-8xl font-serif font-bold tracking-tighter leading-none">
+                                <h1 className="title">
                                     Daily <span className="italic font-normal">Brief</span>
                                 </h1>
                             </div>
-                            <div className="flex flex-col items-start md:items-end gap-2">
-                                <div className="flex items-center gap-2 text-black/60 font-mono text-xs uppercase tracking-widest">
-                                    <i data-lucide="clock" style={{width: '14px'}}></i>
+                            <div className="header-right">
+                                <div className="time-display">
+                                    <i data-lucide="clock" style={{width:'14px',height:'14px'}}></i>
                                     {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                 </div>
-                                <div className="text-sm font-serif italic text-black/40">
+                                <div className="date-display">
                                     {currentTime.toLocaleDateString('it-IT', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                                 </div>
                             </div>
                         </div>
                     </header>
 
-                    <main className="max-w-7xl mx-auto px-6 mt-6">
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                            <div className="lg:col-span-2">
-                                <div className="flex justify-between items-center mb-8">
-                                    <h2 className="text-[10px] font-bold uppercase tracking-[0.4em] text-black/40 font-mono">Testate Selezionate</h2>
-                                    <button onClick={() => setIsModalOpen(true)} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest hover:text-black/60 transition-colors">
-                                        <i data-lucide="plus" style={{width: '16px'}}></i> Aggiungi Fonte
+                    <main className="max-w-7xl px-6 mt-6">
+                        <div className="main-grid">
+                            <div>
+                                <div className="section-header">
+                                    <span className="section-label">Testate Selezionate</span>
+                                    <button className="add-btn" onClick={() => setIsModalOpen(true)}>
+                                        <i data-lucide="plus" style={{width:'16px',height:'16px'}}></i>
+                                        Aggiungi Fonte
                                     </button>
                                 </div>
                                 <div className="editorial-grid">
@@ -247,13 +668,11 @@
                                 </div>
                             </div>
                             <div className="space-y-8">
-                                <h2 className="text-[10px] font-bold uppercase tracking-[0.4em] text-black/40 font-mono">Note Personali</h2>
+                                <span className="section-label">Note Personali</span>
                                 <Notepad value={note} onChange={setNote} />
-                                <div className="p-8 bg-black text-white">
-                                    <h3 className="font-serif text-xl mb-4 italic">Rituale del Mattino</h3>
-                                    <p className="text-sm text-white/60 leading-relaxed">
-                                        Inizia la giornata con chiarezza. Consulta le fonti più affidabili, annota le tue priorità e dai il giusto tono alla tua giornata.
-                                    </p>
+                                <div className="ritual-box">
+                                    <h3>Rituale del Mattino</h3>
+                                    <p>Inizia la giornata con chiarezza. Consulta le fonti più affidabili, annota le tue priorità e dai il giusto tono alla tua giornata.</p>
                                 </div>
                             </div>
                         </div>
@@ -261,7 +680,7 @@
 
                     <AddHeadlineModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAdd={addHeadline} />
 
-                    <footer className="max-w-7xl mx-auto px-6 mt-24 pt-8 border-t border-black/5 flex justify-between items-center text-[10px] font-mono text-black/30 uppercase tracking-[0.2em]">
+                    <footer className="max-w-7xl px-6 mt-24 pt-8">
                         <div>© {new Date().getFullYear()} Rassegna Stampa</div>
                         <div>Creato per la Concentrazione</div>
                     </footer>
