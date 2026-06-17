@@ -15,7 +15,6 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <!-- Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script type="module" src="script.js"></script>
     <link rel="icon" type="image/png" href="./favicon.png">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
     
@@ -162,22 +161,59 @@
             );
         };
 
-        const App = () => {
-            const getInitialHeadlines = () => {
-                const isSaturday = new Date().getDay() === 6;
-                const base = [
-                    { id: 'ilpost', source: 'Attualità', title: 'Il Post: Le notizie, spiegate bene', url: 'https://www.ilpost.it/' },
-                    { id: 'internazionale', source: 'Esteri', title: 'Internazionale: Il meglio dei giornali', url: 'https://www.internazionale.it/' },
-                    { id: 'ansa', source: 'Agenzia stampa', title: 'ANSA: Agenzia Nazionale Stampa Associata', url: 'https://www.ansa.it/' },
-                    { id: 'ap', source: 'Agenzia stampa', title: 'AP News', url: 'https://apnews.com/' },
-                    { id: 'nyt', source: 'Quotidiano', title: 'The New York Times: Journalism', url: 'https://www.nytimes.com/' },
-                    { id: 'athletic', source: 'NFL', title: 'The Athletic: NFL Coverage', url: 'https://www.nytimes.com/athletic/nfl/' },
-                ];
+       const getInitialHeadlines = () => {
+    const isSaturday = new Date().getDay() === 6;
 
-                
-                }
-                return base;
-            };
+    const base = [
+        {
+            id: 'ilpost',
+            source: 'Attualità',
+            title: 'Il Post: Le notizie, spiegate bene',
+            url: 'https://www.ilpost.it/'
+        },
+        {
+            id: 'internazionale',
+            source: 'Esteri',
+            title: 'Internazionale: Il meglio dei giornali',
+            url: 'https://www.internazionale.it/'
+        },
+        {
+            id: 'ansa',
+            source: 'Agenzia stampa',
+            title: 'ANSA: Agenzia Nazionale Stampa Associata',
+            url: 'https://www.ansa.it/'
+        },
+        {
+            id: 'ap',
+            source: 'Agenzia stampa',
+            title: 'AP News',
+            url: 'https://apnews.com/'
+        },
+        {
+            id: 'nyt',
+            source: 'Quotidiano',
+            title: 'The New York Times: Journalism',
+            url: 'https://www.nytimes.com/'
+        },
+        {
+            id: 'athletic',
+            source: 'NFL',
+            title: 'The Athletic: NFL Coverage',
+            url: 'https://www.nytimes.com/athletic/nfl/'
+        }
+    ];
+
+    if (isSaturday) {
+        base.push({
+            id: 'weekend',
+            source: 'Weekend',
+            title: 'Letture del fine settimana',
+            url: 'https://www.ilpost.it/'
+        });
+    }
+
+    return base;
+};
 
             const [headlines, setHeadlines] = useState(() => {
                 const saved = localStorage.getItem('headlines_v5');
