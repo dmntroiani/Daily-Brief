@@ -705,6 +705,10 @@
                         transform: isDragging ? 'scale(0.98)' : 'none',
                         zIndex: isDragging ? 10 : 'auto',
                         border: isDragging ? '2px solid #1A1A1A' : 'none',
+                        WebkitUserSelect: 'none',
+                        WebkitTouchCallout: 'none',
+                        WebkitUserDrag: 'none',
+                        userSelect: 'none',
                     }}
                 >
                     <div className="card-top">
@@ -713,10 +717,13 @@
                                 onTouchStart={(e) => onTouchStart(e, index)}
                                 onTouchMove={onTouchMove}
                                 onTouchEnd={onTouchEnd}
+                                onTouchCancel={onTouchEnd}
                                 style={{ 
                                     color: 'rgba(26,26,26,0.25)', 
                                     padding: '0.25rem', 
                                     cursor: 'grab', 
+                                    WebkitUserSelect: 'none',
+                                    WebkitTouchCallout: 'none',
                                     userSelect: 'none', 
                                     touchAction: 'none' 
                                 }}
@@ -969,6 +976,35 @@
             useEffect(() => { 
                 localStorage.setItem('rassegne_v7', JSON.stringify(rassegne)); 
             }, [rassegne]);
+
+            // Global non-passive touchmove listener to prevent Safari viewport scrolling/bouncing during drag operations
+            useEffect(() => {
+                const handleGlobalTouchMove = (e) => {
+                    if (touchDragIndexRef.current !== null && draggedRassegnaId !== null) {
+                        if (e.cancelable) {
+                            e.preventDefault();
+                        }
+                    }
+                };
+
+                const handleGlobalTouchEnd = () => {
+                    if (touchDragIndexRef.current !== null) {
+                        touchDragIndexRef.current = null;
+                        setDraggedRassegnaId(null);
+                        setDraggedIndex(null);
+                    }
+                };
+
+                document.addEventListener('touchmove', handleGlobalTouchMove, { passive: false });
+                window.addEventListener('touchend', handleGlobalTouchEnd, { passive: true });
+                window.addEventListener('touchcancel', handleGlobalTouchEnd, { passive: true });
+
+                return () => {
+                    document.removeEventListener('touchmove', handleGlobalTouchMove);
+                    window.removeEventListener('touchend', handleGlobalTouchEnd);
+                    window.removeEventListener('touchcancel', handleGlobalTouchEnd);
+                };
+            }, [draggedRassegnaId]);
 
             useEffect(() => {
                 const timer = setInterval(() => setCurrentTime(new Date()), 60000);
