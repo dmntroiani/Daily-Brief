@@ -67,6 +67,7 @@
         .justify-between { justify-content: space-between; }
         .gap-2   { gap: 0.5rem; }
         .gap-3   { gap: 0.75rem; }
+        .gap-4   { gap: 1rem; }
         .gap-8   { gap: 2rem; }
         .gap-12  { gap: 3rem; }
         .gap-1   { gap: 0.25rem; }
@@ -75,10 +76,12 @@
         .space-y-8 > * + * { margin-top: 2rem; }
 
         /* ── Grid ── */
+        .grid { display: grid; }
+
         .editorial-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1px;
+            gap: 1.5px;
             background-color: #1A1A1A;
             border: 1px solid #1A1A1A;
         }
@@ -316,18 +319,17 @@
         .notepad {
             background: white;
             border: 1px solid rgba(26,26,26,0.1);
-            padding: 2rem;
+            padding: 1.5rem;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         .notepad-header {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            justify-content: space-between;
             margin-bottom: 1.5rem;
             border-bottom: 1px solid rgba(26,26,26,0.05);
             padding-bottom: 1rem;
-            color: rgba(26,26,26,0.4);
         }
 
         .notepad-header h2 {
@@ -340,7 +342,7 @@
 
         .notepad textarea {
             width: 100%;
-            height: 300px;
+            height: 220px;
             resize: none;
             background: transparent;
             font-family: 'Inter', sans-serif;
@@ -365,6 +367,78 @@
         textarea::-webkit-scrollbar-track { background: transparent; }
         textarea::-webkit-scrollbar-thumb { background: rgba(26,26,26,0.12); }
 
+        /* ── Calendar Embedded ── */
+        .mini-calendar {
+            border: 1px solid rgba(26,26,26,0.08);
+            padding: 1rem;
+            background-color: #FDFDFB;
+        }
+        .cal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        .cal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.875rem;
+            font-weight: bold;
+            font-style: italic;
+        }
+        .cal-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            color: rgba(26,26,26,0.6);
+        }
+        .cal-btn:hover { background: rgba(26,26,26,0.05); color: #1A1A1A; }
+        
+        .cal-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8px;
+            font-weight: bold;
+            color: rgba(26,26,26,0.4);
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+        .cal-day {
+            position: relative;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            padding: 0.4rem 0;
+            border-radius: 2px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .cal-day:hover { background: rgba(26,26,26,0.05); }
+        .cal-day.active { background: #1A1A1A; color: white; }
+        .cal-day.today { border: 1px solid #1A1A1A; font-weight: bold; }
+        .cal-dot {
+            position: absolute;
+            bottom: 2px;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background-color: rgba(26,26,26,0.5);
+        }
+        .cal-day.active .cal-dot { background-color: white; }
+
         /* ── Ritual box ── */
         .ritual-box {
             padding: 2rem;
@@ -382,6 +456,84 @@
             font-size: 14px;
             color: rgba(255,255,255,0.6);
             line-height: 1.7;
+        }
+
+        /* ── Accordion Folders styles ── */
+        .rassegna-container {
+            border: 1px solid rgba(26,26,26,0.15);
+            background-color: white;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        .rassegna-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.85rem 1.25rem;
+            cursor: pointer;
+            transition: bg 0.2s;
+            user-select: none;
+            border-bottom: 1px solid rgba(26,26,26,0.05);
+        }
+        .rassegna-header.main-head {
+            background-color: rgba(26,26,26,0.04);
+            cursor: default;
+        }
+        .rassegna-header:not(.main-head):hover {
+            background-color: rgba(26,26,26,0.02);
+        }
+        .rassegna-title-icon {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .rassegna-title-name {
+            font-family: 'Playfair Display', serif;
+            font-weight: bold;
+            font-style: italic;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .rassegna-count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            font-weight: normal;
+            font-style: normal;
+            color: rgba(0,0,0,0.4);
+            background-color: rgba(0,0,0,0.05);
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+        .rassegna-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .rassegna-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: rgba(26,26,26,0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .rassegna-btn:hover { color: #1A1A1A; }
+        
+        .manager-toolbar {
+            background-color: #FDFDFB;
+            border: 1px solid rgba(26,26,26,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 2.5rem;
         }
 
         /* ── Modal ── */
@@ -409,6 +561,7 @@
             background: white;
             padding: 2rem;
             box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            border: 1px solid rgba(26,26,26,0.15);
         }
 
         .modal-header {
@@ -498,12 +651,12 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        /* ── Dati iniziali rassegna standard e sabato ── */
+        /* ── Dati iniziali rassegna standard ── */
         const getInitialHeadlines = () => {
             const isSaturday = new Date().getDay() === 6;
             const base = [
                 { id: 'ilpost', source: 'Attualità', title: 'Il Post: Le notizie, spiegate bene', url: 'https://www.ilpost.it/' },
-                { id: 'internazionale', source: 'Esteri', title: 'Internazionale: Il meglio dei giornali', url: 'https://www.internazionale.it/' },
+                { id: 'internazionale', source: 'Esteri', title: 'Internazionale: Il meglio dei giornali di tutto il mondo', url: 'https://www.internazionale.it/' },
                 { id: 'ansa', source: 'Agenzia stampa', title: 'ANSA: Agenzia Nazionale Stampa Associata', url: 'https://www.ansa.it/' },
                 { id: 'ap', source: 'Agenzia stampa', title: 'AP News', url: 'https://apnews.com/' },
                 { id: 'nyt', source: 'Quotidiano', title: 'The New York Times: Groundbreaking Journalism', url: 'https://www.nytimes.com/' },
@@ -520,8 +673,6 @@
                 const ilpostItem = base.find(h => h.id === 'ilpost');
                 const athleticItem = base.find(h => h.id === 'athletic');
                 const others = base.filter(h => h.id !== 'ilpost' && h.id !== 'athletic');
-
-                // Ordine speciale del Sabato: Francesco Costa, Il Post, gli altri giornali, The Athletic alla fine
                 return [dacosta, ilpostItem, ...others, athleticItem].filter(Boolean);
             }
             return base;
@@ -575,7 +726,7 @@
                             </div>
                             <span className="card-source">{headline.source}</span>
                         </div>
-                        <button className="delete-btn flex-shrink-0" onClick={() => onDelete(headline.id)}>
+                        <button className="delete-btn" onClick={() => onDelete(headline.id)}>
                             <i data-lucide="trash-2" style={{width:'12px',height:'12px'}}></i>
                         </button>
                     </div>
@@ -592,21 +743,147 @@
             );
         };
 
-        /* ── Notepad ── */
-        const Notepad = ({ value, onChange }) => (
-            <div className="notepad">
-                <div className="notepad-header">
-                    <i data-lucide="sticky-note" style={{width:'18px',height:'18px'}}></i>
-                    <h2>Riflessioni del Mattino</h2>
+        /* ── Notepad con Calendario Integrato ── */
+        const Notepad = () => {
+            const [selectedDate, setSelectedDate] = useState(new Date());
+            const [viewDate, setViewDate] = useState(new Date());
+            const [note, setNote] = useState('');
+
+            const formatDateKey = (date) => {
+                const yyyy = date.getFullYear();
+                const mm = String(date.getMonth() + 1).padStart(2, '0');
+                const dd = String(date.getDate()).padStart(2, '0');
+                return `${yyyy}-${mm}-${dd}`;
+            };
+
+            const selectedKey = formatDateKey(selectedDate);
+
+            // Migration from simple 'morning_note' key
+            useEffect(() => {
+                const todayStr = formatDateKey(new Date());
+                if (!localStorage.getItem(`morning_note_${todayStr}`)) {
+                    const oldNote = localStorage.getItem('morning_note');
+                    if (oldNote) {
+                        localStorage.setItem(`morning_note_${todayStr}`, oldNote);
+                        localStorage.removeItem('morning_note');
+                    }
+                }
+            }, []);
+
+            // Reload note on date change
+            useEffect(() => {
+                const saved = localStorage.getItem(`morning_note_${selectedKey}`) || '';
+                setNote(saved);
+            }, [selectedKey]);
+
+            const handleNoteChange = (text) => {
+                setNote(text);
+                if (text.trim() === '') {
+                    localStorage.removeItem(`morning_note_${selectedKey}`);
+                } else {
+                    localStorage.setItem(`morning_note_${selectedKey}`, text);
+                }
+            };
+
+            const hasNoteOnDate = (date) => {
+                const key = formatDateKey(date);
+                const content = localStorage.getItem(`morning_note_${key}`);
+                return !!content && content.trim().length > 0;
+            };
+
+            const getDaysInMonth = (date) => {
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                const firstDayIndex = new Date(year, month, 1).getDay();
+                const totalDays = new Date(year, month + 1, 0).getDate();
+                let startOffset = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
+                
+                const days = [];
+                for (let i = 0; i < startOffset; i++) {
+                    days.push(null);
+                }
+                for (let d = 1; d <= totalDays; d++) {
+                    days.push(new Date(year, month, d));
+                }
+                return days;
+            };
+
+            const days = getDaysInMonth(viewDate);
+            const weekDays = ['Lu', 'Ma', 'Me', 'Gi', 'Ve', 'Sa', 'Do'];
+            const monthNames = [
+                'Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
+                'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'
+            ];
+
+            return (
+                <div className="notepad space-y-6">
+                    <div className="notepad-header">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <i data-lucide="sticky-note" style={{width:'18px',height:'18px', color: 'rgba(26,26,26,0.4)'}}></i>
+                            <h2>Riflessioni Giornaliere</h2>
+                        </div>
+                        <div className="font-mono bg-black/5 px-2 py-0.5 rounded text-[10px] tracking-wider uppercase font-bold text-black/60">
+                            {selectedDate.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' })}
+                        </div>
+                    </div>
+
+                    {/* Integrated Mini Calendar */}
+                    <div className="mini-calendar">
+                        <div className="cal-header">
+                            <button className="cal-btn" onClick={() => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1))}>
+                                <i data-lucide="chevron-left" style={{width:'14px',height:'14px'}}></i>
+                            </button>
+                            <span className="cal-title">{monthNames[viewDate.getMonth()]} {viewDate.getFullYear()}</span>
+                            <button className="cal-btn" onClick={() => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1))}>
+                                <i data-lucide="chevron-right" style={{width:'14px',height:'14px'}}></i>
+                            </button>
+                        </div>
+                        <div className="cal-weekdays">
+                            {weekDays.map(d => <span key={d}>{d}</span>)}
+                        </div>
+                        <div className="cal-grid">
+                            {days.map((date, idx) => {
+                                if (!date) return <div key={`empty-${idx}`}></div>;
+                                const isSelected = formatDateKey(date) === selectedKey;
+                                const isToday = formatDateKey(date) === formatDateKey(new Date());
+                                const hasNotes = hasNoteOnDate(date);
+
+                                let classes = 'cal-day';
+                                if (isSelected) classes += ' active';
+                                if (isToday) classes += ' today';
+
+                                return (
+                                    <button 
+                                        key={date.toISOString()} 
+                                        className={classes} 
+                                        onClick={() => setSelectedDate(date)}
+                                    >
+                                        <span>{date.getDate()}</span>
+                                        {hasNotes && <span className="cal-dot"></span>}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* Text Field */}
+                    <div className="space-y-2">
+                        <label className="font-mono text-[9px] uppercase tracking-wider text-black/40">
+                            Nota del {selectedDate.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' })}
+                        </label>
+                        <textarea
+                            value={note}
+                            onChange={(e) => handleNoteChange(e.target.value)}
+                            placeholder="Scrivi le tue riflessioni e priorità..."
+                        />
+                        <div className="notepad-footer flex justify-between">
+                            <span>Autosalvataggio locale</span>
+                            {note.trim() && <span>{note.trim().length} caratt.</span>}
+                        </div>
+                    </div>
                 </div>
-                <textarea
-                    value={value}
-                    onChange={(e) => onChange(e.target.value)}
-                    placeholder="Scrivi qualcosa..."
-                />
-                <div className="notepad-footer">Salvataggio automatico locale</div>
-            </div>
-        );
+            );
+        };
 
         /* ── AddHeadlineModal ── */
         const AddHeadlineModal = ({ isOpen, onClose, onAdd }) => {
@@ -648,7 +925,7 @@
                                 <label>URL</label>
                                 <input type="url" required value={url} onChange={(e) => setUrl(e.target.value)} />
                             </div>
-                            <button type="submit" className="submit-btn">Aggiungi alla Dashboard</button>
+                            <button type="submit" className="submit-btn font-mono">Aggiungi alla Dashboard</button>
                         </form>
                     </div>
                 </div>
@@ -657,19 +934,41 @@
 
         /* ── App principale con drag & drop mouse e touch ── */
         const App = () => {
-            const [headlines, setHeadlines] = useState(() => {
-                const saved = localStorage.getItem('headlines_v6');
-                return saved ? JSON.parse(saved) : getInitialHeadlines();
+            const [rassegne, setRassegne] = useState(() => {
+                let list = [];
+                const saved = localStorage.getItem('rassegne_v7');
+                if (saved) {
+                    try {
+                        list = JSON.parse(saved);
+                    } catch (e) {
+                        console.error("Error parsing rassegne from localstorage", e);
+                    }
+                } else {
+                    const old = localStorage.getItem('headlines_v6');
+                    const initialHeadlines = old ? JSON.parse(old) : getInitialHeadlines();
+                    list = [
+                        { id: 'generale', name: 'In primo piano', headlines: initialHeadlines }
+                    ];
+                }
+                return list.map(r => r.id === 'generale' ? { ...r, name: 'In primo piano' } : r);
             });
-            const [note, setNote]               = useState(() => localStorage.getItem('morning_note') || '');
+
+            const [expandedRassegne, setExpandedRassegne] = useState({ generale: true });
+            
             const [isModalOpen, setIsModalOpen] = useState(false);
+            const [targetRassegnaId, setTargetRassegnaId] = useState('generale');
             const [currentTime, setCurrentTime] = useState(new Date());
 
+            const [isNewFolderOpen, setIsNewFolderOpen] = useState(false);
+            const [newFolderName, setNewFolderName] = useState('');
+
+            const [draggedRassegnaId, setDraggedRassegnaId] = useState(null);
             const [draggedIndex, setDraggedIndex] = useState(null);
             const touchDragIndexRef = useRef(null);
 
-            useEffect(() => { localStorage.setItem('headlines_v6', JSON.stringify(headlines)); }, [headlines]);
-            useEffect(() => { localStorage.setItem('morning_note', note); }, [note]);
+            useEffect(() => { 
+                localStorage.setItem('rassegne_v7', JSON.stringify(rassegne)); 
+            }, [rassegne]);
 
             useEffect(() => {
                 const timer = setInterval(() => setCurrentTime(new Date()), 60000);
@@ -679,10 +978,11 @@
 
             useEffect(() => { 
                 lucide.createIcons(); 
-            }, [headlines, isModalOpen, draggedIndex]);
+            }, [rassegne, isModalOpen, draggedIndex, isNewFolderOpen, expandedRassegne]);
 
             // Desktop Drag & Drop
-            const handleDragStart = (e, index) => {
+            const handleDragStart = (e, rassegnaId, index) => {
+                setDraggedRassegnaId(rassegnaId);
                 setDraggedIndex(index);
                 if (e.dataTransfer) {
                     e.dataTransfer.effectAllowed = 'move';
@@ -690,35 +990,40 @@
                 }
             };
 
-            const handleDragOver = (e, index) => {
+            const handleDragOver = (e, rassegnaId, index) => {
                 e.preventDefault();
-                if (draggedIndex === null || draggedIndex === index) return;
+                if (draggedIndex === null || draggedRassegnaId !== rassegnaId || draggedIndex === index) return;
 
-                const newHeadlines = [...headlines];
-                const draggedItem = newHeadlines[draggedIndex];
-                newHeadlines.splice(draggedIndex, 1);
-                newHeadlines.splice(index, 0, draggedItem);
+                const nextRassegne = rassegne.map((r) => {
+                    if (r.id !== rassegnaId) return r;
+                    const newHeadlines = [...r.headlines];
+                    const draggedItem = newHeadlines[draggedIndex];
+                    newHeadlines.splice(draggedIndex, 1);
+                    newHeadlines.splice(index, 0, draggedItem);
+                    return { ...r, headlines: newHeadlines };
+                });
 
                 setDraggedIndex(index);
-                setHeadlines(newHeadlines);
+                setRassegne(nextRassegne);
             };
 
             const handleDragEnd = () => {
                 setDraggedIndex(null);
+                setDraggedRassegnaId(null);
             };
 
             // Mobile Touch Reorder
-            const handleTouchStart = (e, index) => {
+            const handleTouchStart = (e, rassegnaId, index) => {
                 touchDragIndexRef.current = index;
+                setDraggedRassegnaId(rassegnaId);
                 setDraggedIndex(index);
-                
                 if (typeof window !== 'undefined' && window.navigator && window.navigator.vibrate) {
                     window.navigator.vibrate(20);
                 }
             };
 
             const handleTouchMove = (e) => {
-                if (touchDragIndexRef.current === null) return;
+                if (touchDragIndexRef.current === null || !draggedRassegnaId) return;
 
                 const touch = e.touches[0];
                 const element = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -730,28 +1035,72 @@
                     const sourceIndex = touchDragIndexRef.current;
 
                     if (!isNaN(targetIndex) && sourceIndex !== targetIndex) {
-                        const newHeadlines = [...headlines];
-                        const draggedItem = newHeadlines[sourceIndex];
-                        newHeadlines.splice(sourceIndex, 1);
-                        newHeadlines.splice(targetIndex, 0, draggedItem);
+                        const nextRassegne = rassegne.map((r) => {
+                            if (r.id !== draggedRassegnaId) return r;
+                            const newHeadlines = [...r.headlines];
+                            const draggedItem = newHeadlines[sourceIndex];
+                            newHeadlines.splice(sourceIndex, 1);
+                            newHeadlines.splice(targetIndex, 0, draggedItem);
+                            return { ...r, headlines: newHeadlines };
+                        });
 
                         touchDragIndexRef.current = targetIndex;
                         setDraggedIndex(targetIndex);
-                        setHeadlines(newHeadlines);
+                        setRassegne(nextRassegne);
                     }
                 }
             };
 
             const handleTouchEnd = () => {
                 touchDragIndexRef.current = null;
+                setDraggedRassegnaId(null);
                 setDraggedIndex(null);
             };
 
             const addHeadline = (title, url, source) => {
                 const newH = { id: Math.random().toString(36).substr(2, 9), title, url, source };
-                setHeadlines([newH, ...headlines]);
+                setRassegne(prev => prev.map(r => {
+                    if (r.id !== targetRassegnaId) return r;
+                    return { ...r, headlines: [newH, ...r.headlines] };
+                }));
             };
-            const deleteHeadline = (id) => setHeadlines(headlines.filter(h => h.id !== id));
+
+            const deleteHeadline = (rassegnaId, id) => {
+                setRassegne(prev => prev.map(r => {
+                    if (r.id !== rassegnaId) return r;
+                    return { ...r, headlines: r.headlines.filter(h => h.id !== id) };
+                }));
+            };
+
+            const toggleRassegna = (id) => {
+                if (id === 'generale') return;
+                setExpandedRassegne(prev => ({ ...prev, [id]: !prev[id] }));
+            };
+
+            const handleCreateFolder = (e) => {
+                e.preventDefault();
+                if (!newFolderName.trim()) return;
+                const newId = Math.random().toString(36).substr(2, 9);
+                const newFold = { id: newId, name: newFolderName, headlines: [] };
+                
+                setRassegne(prev => [...prev, newFold]);
+                setExpandedRassegne(prev => ({ ...prev, [newId]: true }));
+                setNewFolderName('');
+                setIsNewFolderOpen(false);
+            };
+
+            const handleDeleteRassegna = (id, e) => {
+                e.stopPropagation();
+                if (id === 'generale') return;
+                if (window.confirm("Sei sicuro di voler eliminare questa rassegna tematica e tutte le sue fonti?")) {
+                    setRassegne(prev => prev.filter(r => r.id !== id));
+                    setExpandedRassegne(prev => {
+                        const next = { ...prev };
+                        delete next[id];
+                        return next;
+                    });
+                }
+            };
 
             return (
                 <div className="min-h-screen pb-20">
@@ -780,44 +1129,217 @@
 
                     <main className="max-w-7xl px-6 mt-6">
                         <div className="main-grid">
-                            <div>
-                                <div className="section-header">
-                                    <span className="section-label">Testate Selezionate</span>
-                                    <button className="add-btn" onClick={() => setIsModalOpen(true)}>
-                                        <i data-lucide="plus" style={{width:'16px',height:'16px'}}></i>
-                                        Aggiungi Fonte
+                            
+                            {/* Rassegne Left panel */}
+                            <div className="space-y-6">
+                                {(() => {
+                                    const generaleRassegna = rassegne.find(r => r.id === 'generale');
+                                    if (!generaleRassegna) return null;
+                                    return (
+                                        <div className="rassegna-container" style={{ marginBottom: '1.5rem' }}>
+                                            <div className="rassegna-header main-head" style={{ cursor: 'default', backgroundColor: 'rgba(26,26,26,0.03)' }}>
+                                                <div className="rassegna-title-icon">
+                                                    <i data-lucide="star" style={{width:'16px',height:'16px', color: '#1a1a1a'}}></i>
+                                                    <span className="rassegna-title-name">
+                                                        In primo piano
+                                                        <span className="rassegna-count">{generaleRassegna.headlines?.length || 0}</span>
+                                                    </span>
+                                                </div>
+
+                                                <div className="rassegna-controls">
+                                                    <button 
+                                                        className="rassegna-btn"
+                                                        onClick={() => {
+                                                            setTargetRassegnaId('generale');
+                                                            setIsModalOpen(true);
+                                                        }}
+                                                    >
+                                                        <i data-lucide="plus" style={{width:'12px',height:'12px'}}></i> Fonte
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div className="editorial-grid">
+                                                {generaleRassegna.headlines && generaleRassegna.headlines.length > 0 ? (
+                                                    generaleRassegna.headlines.map((h, i) => (
+                                                        <HeadlineCard 
+                                                            key={h.id} 
+                                                            headline={h} 
+                                                            index={i}
+                                                            onDelete={(id) => deleteHeadline('generale', id)}
+                                                            onDragStart={(e) => handleDragStart(e, 'generale', i)}
+                                                            onDragOver={(e) => handleDragOver(e, 'generale', i)}
+                                                            onDragEnd={handleDragEnd}
+                                                            onTouchStart={(e) => handleTouchStart(e, 'generale', i)}
+                                                            onTouchMove={handleTouchMove}
+                                                            onTouchEnd={handleTouchEnd}
+                                                            isDragging={draggedIndex === i && draggedRassegnaId === 'generale'}
+                                                        />
+                                                    ))
+                                                ) : (
+                                                    <div style={{gridColumn: 'span 2', textAlign:'center', backgroundColor:'white', padding: '3rem 1rem'}}>
+                                                        <p style={{fontFamily: 'Playfair Display', fontStyle:'italic', color: 'rgba(0,0,0,0.3)', fontSize: '14px'}}>Nessuna fonte in questo spazio.</p>
+                                                        <button 
+                                                            onClick={() => { setTargetRassegnaId('generale'); setIsModalOpen(true); }}
+                                                            className="submit-btn" 
+                                                            style={{maxWidth: '180px', marginTop:'1rem', padding: '0.6rem', fontSize: '10px'}}
+                                                        >
+                                                            + Aggiungi Fonte
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    );
+                                })()}
+
+                                <div className="manager-toolbar">
+                                    <span className="section-label" style={{letterSpacing: '0.2em'}}>Rassegne e Temi ({rassegne.filter(r => r.id !== 'generale').length})</span>
+                                    <button className="add-btn font-mono font-bold" onClick={() => setIsNewFolderOpen(true)}>
+                                        <i data-lucide="folder-plus" style={{width:'14px',height:'14px'}}></i>
+                                        Nuova Rassegna
                                     </button>
                                 </div>
-                                <div className="editorial-grid">
-                                    {headlines.map((h, i) => (
-                                        <HeadlineCard 
-                                            key={h.id} 
-                                            headline={h} 
-                                            index={i}
-                                            onDelete={deleteHeadline}
-                                            onDragStart={handleDragStart}
-                                            onDragOver={handleDragOver}
-                                            onDragEnd={handleDragEnd}
-                                            onTouchStart={handleTouchStart}
-                                            onTouchMove={handleTouchMove}
-                                            onTouchEnd={handleTouchEnd}
-                                            isDragging={draggedIndex === i}
-                                        />
-                                    ))}
-                                </div>
+
+                                {rassegne.filter(r => r.id !== 'generale').map((rassegna) => {
+                                    const isExpanded = !!expandedRassegne[rassegna.id];
+
+                                    return (
+                                        <div key={rassegna.id} className="rassegna-container">
+                                            <div 
+                                                className="rassegna-header"
+                                                onClick={() => toggleRassegna(rassegna.id)}
+                                            >
+                                                <div className="rassegna-title-icon">
+                                                    <i data-lucide="folder" style={{width:'16px',height:'16px', opacity: 0.5}}></i>
+                                                    <span className="rassegna-title-name">
+                                                        {rassegna.name}
+                                                        <span className="rassegna-count">{rassegna.headlines?.length || 0}</span>
+                                                    </span>
+                                                </div>
+
+                                                <div className="rassegna-controls">
+                                                    <button 
+                                                        className="rassegna-btn"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setTargetRassegnaId(rassegna.id);
+                                                            setIsModalOpen(true);
+                                                        }}
+                                                    >
+                                                        <i data-lucide="plus" style={{width:'12px',height:'12px'}}></i> Fonte
+                                                    </button>
+
+                                                    <div className="text-black/40">
+                                                        {isExpanded ? (
+                                                            <i data-lucide="chevron-up" style={{width:'16px',height:'16px'}}></i>
+                                                        ) : (
+                                                            <i data-lucide="chevron-down" style={{width:'16px',height:'16px'}}></i>
+                                                        )}
+                                                    </div>
+
+                                                    <button 
+                                                        style={{
+                                                            background: 'none',
+                                                            border: 'none',
+                                                            cursor: 'pointer',
+                                                            color: 'rgba(26,26,26,0.35)',
+                                                            padding: '0.4rem',
+                                                            borderRadius: '6px',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            transition: 'all 0.2s'
+                                                        }}
+                                                        onMouseEnter={(e) => { e.currentTarget.style.color = '#dc2626'; e.currentTarget.style.backgroundColor = '#fef2f2'; }}
+                                                        onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(26,26,26,0.35)'; e.currentTarget.style.backgroundColor = 'transparent'; }}
+                                                        onClick={(e) => handleDeleteRassegna(rassegna.id, e)}
+                                                        title="Elimina questa rassegna"
+                                                    >
+                                                        <i data-lucide="trash-2" style={{width:'15px',height:'15px', display: 'block'}}></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            {isExpanded && (
+                                                <div className="editorial-grid">
+                                                    {rassegna.headlines && rassegna.headlines.length > 0 ? (
+                                                        rassegna.headlines.map((h, i) => (
+                                                            <HeadlineCard 
+                                                                key={h.id} 
+                                                                headline={h} 
+                                                                index={i}
+                                                                onDelete={(id) => deleteHeadline(rassegna.id, id)}
+                                                                onDragStart={(e) => handleDragStart(e, rassegna.id, i)}
+                                                                onDragOver={(e) => handleDragOver(e, rassegna.id, i)}
+                                                                onDragEnd={handleDragEnd}
+                                                                onTouchStart={(e) => handleTouchStart(e, rassegna.id, i)}
+                                                                onTouchMove={handleTouchMove}
+                                                                onTouchEnd={handleTouchEnd}
+                                                                isDragging={draggedIndex === i && draggedRassegnaId === rassegna.id}
+                                                            />
+                                                        ))
+                                                    ) : (
+                                                        <div style={{gridColumn: 'span 2', textAlign:'center', backgroundColor:'white', padding: '3rem 1rem'}}>
+                                                            <p style={{fontFamily: 'Playfair Display', fontStyle:'italic', color: 'rgba(0,0,0,0.3)', fontSize: '14px'}}>Nessuna fonte in questo spazio.</p>
+                                                            <button 
+                                                                onClick={() => { setTargetRassegnaId(rassegna.id); setIsModalOpen(true); }}
+                                                                className="submit-btn" 
+                                                                style={{maxWidth: '180px', marginTop:'1rem', padding: '0.6rem', fontSize: '10px'}}
+                                                            >
+                                                                + Aggiungi Fonte
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
                             </div>
+
+                            {/* Column space: Notes & Ritual */}
                             <div className="space-y-8">
-                                <span className="section-label">Note Personali</span>
-                                <Notepad value={note} onChange={setNote} />
+                                <span className="section-label">Riflessioni & Note</span>
+                                <Notepad />
                                 <div className="ritual-box">
                                     <h3>Rituale del Mattino</h3>
-                                    <p>Inizia la giornata con chiarezza. Consulta le fonti più affidabili, annota le tue priorità e dai il giusto tono alla tua giornata.</p>
+                                    <p>Inizia la giornata con chiarezza. Consulta le fonti più affidabili, annota le tue priorità sul calendario rassegna e dai il giusto tono alla tua giornata.</p>
                                 </div>
                             </div>
+
                         </div>
                     </main>
 
                     <AddHeadlineModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAdd={addHeadline} />
+
+                    {/* MODAL: Nuova Rassegna */}
+                    {isNewFolderOpen && (
+                        <div className="modal-overlay">
+                            <div className="modal-backdrop" onClick={() => setIsNewFolderOpen(false)}></div>
+                            <div className="modal-box">
+                                <div className="modal-header">
+                                    <h2 style={{fontFamily:'Playfair Display', fontStyle:'italic'}}>Nuova Rassegna Tematica</h2>
+                                    <button className="modal-close" onClick={() => setIsNewFolderOpen(false)}>
+                                        <i data-lucide="x" style={{width:'20px',height:'20px'}}></i>
+                                    </button>
+                                </div>
+                                <form onSubmit={handleCreateFolder}>
+                                    <div className="form-group">
+                                        <label>Nome / Canale</label>
+                                        <input 
+                                            type="text" 
+                                            required 
+                                            placeholder="es. Economia, Sport, Idee..." 
+                                            value={newFolderName} 
+                                            onChange={(e) => setNewFolderName(e.target.value)} 
+                                        />
+                                    </div>
+                                    <button type="submit" className="submit-btn">Crea Canale</button>
+                                </form>
+                            </div>
+                        </div>
+                    )}
 
                     <footer className="max-w-7xl px-6 mt-24 pt-8">
                         <div>© {new Date().getFullYear()} Rassegna Stampa</div>
