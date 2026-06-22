@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -75,8 +75,6 @@
         .space-y-8 > * + * { margin-top: 2rem; }
 
         /* ── Grid ── */
-        .grid { display: grid; }
-
         .editorial-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -498,29 +496,86 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState, useEffect, useRef } = React;
 
-        /* ── Dati iniziali ── */
+        /* ── Dati iniziali rassegna standard e sabato ── */
         const getInitialHeadlines = () => {
             const isSaturday = new Date().getDay() === 6;
             const base = [
-                { id: 'corriere',   source: 'Corriere della Sera', title: 'Corriere della Sera – ultime notizie',   url: 'https://www.corriere.it/' },
-                { id: 'repubblica', source: 'La Repubblica',        title: 'La Repubblica – news e approfondimenti', url: 'https://www.repubblica.it/' },
-                { id: 'sole24ore',  source: 'Il Sole 24 Ore',       title: 'Il Sole 24 Ore – economia e finanza',    url: 'https://www.ilsole24ore.com/' },
-                { id: 'ilpost',     source: 'Il Post',              title: 'Il Post – notizie spiegate bene',        url: 'https://www.ilpost.it/' },
+                { id: 'ilpost', source: 'Attualità', title: 'Il Post: Le notizie, spiegate bene', url: 'https://www.ilpost.it/' },
+                { id: 'internazionale', source: 'Esteri', title: 'Internazionale: Il meglio dei giornali', url: 'https://www.internazionale.it/' },
+                { id: 'ansa', source: 'Agenzia stampa', title: 'ANSA: Agenzia Nazionale Stampa Associata', url: 'https://www.ansa.it/' },
+                { id: 'ap', source: 'Agenzia stampa', title: 'AP News', url: 'https://apnews.com/' },
+                { id: 'nyt', source: 'Quotidiano', title: 'The New York Times: Groundbreaking Journalism', url: 'https://www.nytimes.com/' },
+                { id: 'athletic', source: 'NFL', title: 'The Athletic: NFL Coverage and Analysis', url: 'https://www.nytimes.com/athletic/nfl/' }
             ];
-            if (isSaturday) base.push({ id: 'weekend', source: 'Weekend', title: 'Letture del fine settimana', url: 'https://www.ilpost.it/' });
+
+            if (isSaturday) {
+                const dacosta = {
+                    id: 'dacosta',
+                    source: 'Newsletter',
+                    title: 'Da Costa a Costa: La newsletter di Francesco Costa',
+                    url: 'https://www.ilpost.it/newsletter/da-costa-a-costa/'
+                };
+                const ilpostItem = base.find(h => h.id === 'ilpost');
+                const athleticItem = base.find(h => h.id === 'athletic');
+                const others = base.filter(h => h.id !== 'ilpost' && h.id !== 'athletic');
+
+                // Ordine speciale del Sabato: Francesco Costa, Il Post, gli altri giornali, The Athletic alla fine
+                return [dacosta, ilpostItem, ...others, athleticItem].filter(Boolean);
+            }
             return base;
         };
 
-        /* ── HeadlineCard ── */
-        const HeadlineCard = ({ headline, onDelete }) => {
+        /* ── HeadlineCard con touch & mouse drag ── */
+        const HeadlineCard = ({ 
+            headline, 
+            index, 
+            onDelete, 
+            onDragStart, 
+            onDragOver, 
+            onDragEnd, 
+            onTouchStart, 
+            onTouchMove, 
+            onTouchEnd, 
+            isDragging 
+        }) => {
             const displayTitle = headline.title.split(':')[0].trim();
             return (
-                <div className="editorial-card">
+                <div 
+                    draggable="true"
+                    onDragStart={(e) => onDragStart(e, index)}
+                    onDragOver={(e) => onDragOver(e, index)}
+                    onDragEnd={onDragEnd}
+                    data-index={index}
+                    className="editorial-card"
+                    style={{
+                        opacity: isDragging ? 0.4 : 1,
+                        transform: isDragging ? 'scale(0.98)' : 'none',
+                        zIndex: isDragging ? 10 : 'auto',
+                        border: isDragging ? '2px solid #1A1A1A' : 'none',
+                    }}
+                >
                     <div className="card-top">
-                        <span className="card-source">{headline.source}</span>
-                        <button className="delete-btn" onClick={() => onDelete(headline.id)}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', minWidth: 0 }}>
+                            <div 
+                                onTouchStart={(e) => onTouchStart(e, index)}
+                                onTouchMove={onTouchMove}
+                                onTouchEnd={onTouchEnd}
+                                style={{ 
+                                    color: 'rgba(26,26,26,0.25)', 
+                                    padding: '0.25rem', 
+                                    cursor: 'grab', 
+                                    userSelect: 'none', 
+                                    touchAction: 'none' 
+                                }}
+                                title="Trascina per ordinare"
+                            >
+                                <i data-lucide="grip-vertical" style={{ width: '12px', height: '12px', display: 'block' }}></i>
+                            </div>
+                            <span className="card-source">{headline.source}</span>
+                        </div>
+                        <button className="delete-btn flex-shrink-0" onClick={() => onDelete(headline.id)}>
                             <i data-lucide="trash-2" style={{width:'12px',height:'12px'}}></i>
                         </button>
                     </div>
@@ -600,17 +655,20 @@
             );
         };
 
-        /* ── App ── */
+        /* ── App principale con drag & drop mouse e touch ── */
         const App = () => {
             const [headlines, setHeadlines] = useState(() => {
-                const saved = localStorage.getItem('headlines_v5');
+                const saved = localStorage.getItem('headlines_v6');
                 return saved ? JSON.parse(saved) : getInitialHeadlines();
             });
             const [note, setNote]               = useState(() => localStorage.getItem('morning_note') || '');
             const [isModalOpen, setIsModalOpen] = useState(false);
             const [currentTime, setCurrentTime] = useState(new Date());
 
-            useEffect(() => { localStorage.setItem('headlines_v5', JSON.stringify(headlines)); }, [headlines]);
+            const [draggedIndex, setDraggedIndex] = useState(null);
+            const touchDragIndexRef = useRef(null);
+
+            useEffect(() => { localStorage.setItem('headlines_v6', JSON.stringify(headlines)); }, [headlines]);
             useEffect(() => { localStorage.setItem('morning_note', note); }, [note]);
 
             useEffect(() => {
@@ -619,7 +677,75 @@
                 return () => clearInterval(timer);
             }, []);
 
-            useEffect(() => { lucide.createIcons(); }, [headlines, isModalOpen]);
+            useEffect(() => { 
+                lucide.createIcons(); 
+            }, [headlines, isModalOpen, draggedIndex]);
+
+            // Desktop Drag & Drop
+            const handleDragStart = (e, index) => {
+                setDraggedIndex(index);
+                if (e.dataTransfer) {
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', index.toString());
+                }
+            };
+
+            const handleDragOver = (e, index) => {
+                e.preventDefault();
+                if (draggedIndex === null || draggedIndex === index) return;
+
+                const newHeadlines = [...headlines];
+                const draggedItem = newHeadlines[draggedIndex];
+                newHeadlines.splice(draggedIndex, 1);
+                newHeadlines.splice(index, 0, draggedItem);
+
+                setDraggedIndex(index);
+                setHeadlines(newHeadlines);
+            };
+
+            const handleDragEnd = () => {
+                setDraggedIndex(null);
+            };
+
+            // Mobile Touch Reorder
+            const handleTouchStart = (e, index) => {
+                touchDragIndexRef.current = index;
+                setDraggedIndex(index);
+                
+                if (typeof window !== 'undefined' && window.navigator && window.navigator.vibrate) {
+                    window.navigator.vibrate(20);
+                }
+            };
+
+            const handleTouchMove = (e) => {
+                if (touchDragIndexRef.current === null) return;
+
+                const touch = e.touches[0];
+                const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                if (!element) return;
+
+                const card = element.closest('[data-index]');
+                if (card) {
+                    const targetIndex = parseInt(card.getAttribute('data-index') || '', 10);
+                    const sourceIndex = touchDragIndexRef.current;
+
+                    if (!isNaN(targetIndex) && sourceIndex !== targetIndex) {
+                        const newHeadlines = [...headlines];
+                        const draggedItem = newHeadlines[sourceIndex];
+                        newHeadlines.splice(sourceIndex, 1);
+                        newHeadlines.splice(targetIndex, 0, draggedItem);
+
+                        touchDragIndexRef.current = targetIndex;
+                        setDraggedIndex(targetIndex);
+                        setHeadlines(newHeadlines);
+                    }
+                }
+            };
+
+            const handleTouchEnd = () => {
+                touchDragIndexRef.current = null;
+                setDraggedIndex(null);
+            };
 
             const addHeadline = (title, url, source) => {
                 const newH = { id: Math.random().toString(36).substr(2, 9), title, url, source };
@@ -663,8 +789,20 @@
                                     </button>
                                 </div>
                                 <div className="editorial-grid">
-                                    {headlines.map(h => (
-                                        <HeadlineCard key={h.id} headline={h} onDelete={deleteHeadline} />
+                                    {headlines.map((h, i) => (
+                                        <HeadlineCard 
+                                            key={h.id} 
+                                            headline={h} 
+                                            index={i}
+                                            onDelete={deleteHeadline}
+                                            onDragStart={handleDragStart}
+                                            onDragOver={handleDragOver}
+                                            onDragEnd={handleDragEnd}
+                                            onTouchStart={handleTouchStart}
+                                            onTouchMove={handleTouchMove}
+                                            onTouchEnd={handleTouchEnd}
+                                            isDragging={draggedIndex === i}
+                                        />
                                     ))}
                                 </div>
                             </div>
@@ -694,3 +832,4 @@
     </script>
 </body>
 </html>
+
