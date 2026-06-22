@@ -689,29 +689,20 @@
             onTouchStart, 
             onTouchMove, 
             onTouchEnd, 
-            isDragging,
-            onMove,
-            totalCount = 0
+            isDragging
         }) => {
             const displayTitle = headline.title.split(':')[0].trim();
             const handleRef = React.useRef(null);
-            const [isSafariMobile, setIsSafariMobile] = React.useState(false);
-
-            React.useEffect(() => {
-                const isTouch = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
-                const isSaf = typeof window !== 'undefined' && /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-                setIsSafariMobile(!!(isTouch && isSaf));
-            }, []);
 
             React.useEffect(() => {
                 const el = handleRef.current;
-                if (!el || isSafariMobile) return;
+                if (!el) return;
 
                 const onStart = (e) => {
                     onTouchStart(e, index);
                 };
 
-                const onMoveEvent = (e) => {
+                const onMove = (e) => {
                     onTouchMove(e);
                 };
 
@@ -721,15 +712,15 @@
 
                 // Attacca gli eventi con { passive: false } per forzare Safari mobile a rispettare preventDefault
                 el.addEventListener('touchstart', onStart, { passive: false });
-                el.addEventListener('touchmove', onMoveEvent, { passive: false });
+                el.addEventListener('touchmove', onMove, { passive: false });
                 el.addEventListener('touchend', onEnd, { passive: false });
 
                 return () => {
                     el.removeEventListener('touchstart', onStart);
-                    el.removeEventListener('touchmove', onMoveEvent);
+                    el.removeEventListener('touchmove', onMove);
                     el.removeEventListener('touchend', onEnd);
                 };
-            }, [onTouchStart, onTouchMove, onTouchEnd, index, isSafariMobile]);
+            }, [onTouchStart, onTouchMove, onTouchEnd, index]);
 
             return (
                 <div 
@@ -748,64 +739,19 @@
                 >
                     <div className="card-top">
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', minWidth: 0 }}>
-                            {!isSafariMobile ? (
-                                <div 
-                                    ref={handleRef}
-                                    style={{ 
-                                        color: 'rgba(26,26,26,0.25)', 
-                                        padding: '0.25rem', 
-                                        cursor: 'grab', 
-                                        userSelect: 'none', 
-                                        touchAction: 'none' 
-                                    }}
-                                    title="Trascina per ordinare"
-                                >
-                                    <i data-lucide="grip-vertical" style={{ width: '12px', height: '12px', display: 'block' }}></i>
-                                </div>
-                            ) : (
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '2px', backgroundColor: 'rgba(26,26,26,0.04)', padding: '2px', borderRadius: '4px', marginRight: '4px' }}>
-                                    <button
-                                        onClick={() => onMove && onMove('up')}
-                                        disabled={index === 0}
-                                        style={{
-                                            border: 'none',
-                                            background: 'none',
-                                            padding: '2px',
-                                            cursor: index === 0 ? 'not-allowed' : 'pointer',
-                                            color: index === 0 ? 'rgba(26,26,26,0.1)' : 'rgba(26,26,26,0.6)',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            borderRadius: '3px'
-                                        }}
-                                        title="Sposta su"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                            <polyline points="18 15 12 9 6 15"></polyline>
-                                        </svg>
-                                    </button>
-                                    <button
-                                        onClick={() => onMove && onMove('down')}
-                                        disabled={index === totalCount - 1}
-                                        style={{
-                                            border: 'none',
-                                            background: 'none',
-                                            padding: '2px',
-                                            cursor: index === totalCount - 1 ? 'not-allowed' : 'pointer',
-                                            color: index === totalCount - 1 ? 'rgba(26,26,26,0.1)' : 'rgba(26,26,26,0.6)',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            borderRadius: '3px'
-                                        }}
-                                        title="Sposta giù"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                            <polyline points="6 9 12 15 18 9"></polyline>
-                                        </svg>
-                                    </button>
-                                </div>
-                            )}
+                            <div 
+                                ref={handleRef}
+                                style={{ 
+                                    color: 'rgba(26,26,26,0.25)', 
+                                    padding: '0.25rem', 
+                                    cursor: 'grab', 
+                                    userSelect: 'none', 
+                                    touchAction: 'none' 
+                                }}
+                                title="Trascina per ordinare"
+                            >
+                                <i data-lucide="grip-vertical" style={{ width: '12px', height: '12px', display: 'block' }}></i>
+                            </div>
                             <span className="card-source">{headline.source}</span>
                         </div>
                         <button className="delete-btn" onClick={() => onDelete(headline.id)}>
@@ -1177,19 +1123,6 @@
                 }));
             };
 
-            const moveHeadline = (rassegnaId, index, direction) => {
-                setRassegne(prev => prev.map(r => {
-                    if (r.id !== rassegnaId) return r;
-                    const headlines = [...r.headlines];
-                    const targetIndex = direction === 'up' ? index - 1 : index + 1;
-                    if (targetIndex < 0 || targetIndex >= headlines.length) return r;
-                    const temp = headlines[index];
-                    headlines[index] = headlines[targetIndex];
-                    headlines[targetIndex] = temp;
-                    return { ...r, headlines };
-                }));
-            };
-
             const toggleRassegna = (id) => {
                 if (id === 'generale') return;
                 setExpandedRassegne(prev => ({ ...prev, [id]: !prev[id] }));
@@ -1292,8 +1225,6 @@
                                                             onTouchMove={handleTouchMove}
                                                             onTouchEnd={handleTouchEnd}
                                                             isDragging={draggedIndex === i && draggedRassegnaId === 'generale'}
-                                                            onMove={(direction) => moveHeadline('generale', i, direction)}
-                                                            totalCount={generaleRassegna.headlines.length}
                                                         />
                                                     ))
                                                 ) : (
@@ -1397,8 +1328,6 @@
                                                                 onTouchMove={handleTouchMove}
                                                                 onTouchEnd={handleTouchEnd}
                                                                 isDragging={draggedIndex === i && draggedRassegnaId === rassegna.id}
-                                                                onMove={(direction) => moveHeadline(rassegna.id, i, direction)}
-                                                                totalCount={rassegna.headlines.length}
                                                             />
                                                         ))
                                                     ) : (
