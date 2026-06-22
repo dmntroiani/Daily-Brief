@@ -1026,12 +1026,35 @@
             const handleTouchMove = (e) => {
                 if (touchDragIndexRef.current === null || !draggedRassegnaId) return;
 
+                // Impedisci lo scrolling della pagina su iOS Safari durante il trascinamento
+                if (e.cancelable) {
+                    e.preventDefault();
+                }
+
                 const touch = e.touches[0];
+                const draggedCard = e.currentTarget.closest('.editorial-card');
+                
+                let originalPointerEvents = '';
+                if (draggedCard) {
+                    originalPointerEvents = draggedCard.style.pointerEvents;
+                    draggedCard.style.pointerEvents = 'none';
+                }
+
                 const element = document.elementFromPoint(touch.clientX, touch.clientY);
+
+                if (draggedCard) {
+                    draggedCard.style.pointerEvents = originalPointerEvents;
+                }
+
                 if (!element) return;
 
                 const card = element.closest('[data-index]');
-                if (card) {
+                if (card && draggedCard) {
+                    // Limita il trascinamento solo all'interno della stessa griglia (rassegna)
+                    if (card.closest('.editorial-grid') !== draggedCard.closest('.editorial-grid')) {
+                        return;
+                    }
+
                     const targetIndex = parseInt(card.getAttribute('data-index') || '', 10);
                     const sourceIndex = touchDragIndexRef.current;
 
