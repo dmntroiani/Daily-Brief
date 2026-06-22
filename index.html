@@ -689,9 +689,19 @@
             onTouchStart, 
             onTouchMove, 
             onTouchEnd, 
-            isDragging 
+            isDragging,
+            onMove,
+            totalCount = 0
         }) => {
             const displayTitle = headline.title.split(':')[0].trim();
+            const [isSafari, setIsSafari] = useState(false);
+
+            useEffect(() => {
+                const isSaf = typeof window !== 'undefined' && 
+                    /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+                setIsSafari(isSaf);
+            }, []);
+
             return (
                 <div 
                     draggable="true"
@@ -705,10 +715,11 @@
                         transform: isDragging ? 'scale(0.98)' : 'none',
                         zIndex: isDragging ? 10 : 'auto',
                         border: isDragging ? '2px solid #1A1A1A' : 'none',
+                        pointerEvents: isDragging ? 'none' : 'auto',
                     }}
                 >
                     <div className="card-top">
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', minWidth: 0, flexWrap: 'wrap' }}>
                             <div 
                                 onTouchStart={(e) => onTouchStart(e, index)}
                                 onTouchMove={onTouchMove}
@@ -725,6 +736,45 @@
                                 <i data-lucide="grip-vertical" style={{ width: '12px', height: '12px', display: 'block' }}></i>
                             </div>
                             <span className="card-source">{headline.source}</span>
+
+                            {isSafari && onMove && totalCount > 1 && (
+                                <div style={{ display: 'flex', gap: '2px', backgroundColor: 'rgba(26,26,26,0.04)', padding: '2px', borderRadius: '4px', marginLeft: '0.375rem' }}>
+                                    <button
+                                        onClick={() => onMove('backward')}
+                                        disabled={index === 0}
+                                        style={{
+                                            border: 'none',
+                                            background: 'none',
+                                            padding: '2px',
+                                            cursor: index === 0 ? 'not-allowed' : 'pointer',
+                                            color: index === 0 ? 'rgba(26,26,26,0.1)' : 'rgba(26,26,26,0.6)',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}
+                                        title="Sposta prima (indietro)"
+                                    >
+                                        <i data-lucide="arrow-left" style={{ width: '11px', height: '11px', display: 'block' }}></i>
+                                    </button>
+                                    <button
+                                        onClick={() => onMove('forward')}
+                                        disabled={index === totalCount - 1}
+                                        style={{
+                                            border: 'none',
+                                            background: 'none',
+                                            padding: '2px',
+                                            cursor: index === totalCount - 1 ? 'not-allowed' : 'pointer',
+                                            color: index === totalCount - 1 ? 'rgba(26,26,26,0.1)' : 'rgba(26,26,26,0.6)',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}
+                                        title="Sposta dopo (avanti)"
+                                    >
+                                        <i data-lucide="arrow-right" style={{ width: '11px', height: '11px', display: 'block' }}></i>
+                                    </button>
+                                </div>
+                            )}
                         </div>
                         <button className="delete-btn" onClick={() => onDelete(headline.id)}>
                             <i data-lucide="trash-2" style={{width:'12px',height:'12px'}}></i>
@@ -1072,6 +1122,21 @@
                 }));
             };
 
+            const moveHeadline = (rassegnaId, index, direction) => {
+                setRassegne(prev => prev.map(r => {
+                    if (r.id !== rassegnaId) return r;
+                    const headlines = [...r.headlines];
+                    const targetIndex = direction === 'backward' ? index - 1 : index + 1;
+                    if (targetIndex < 0 || targetIndex >= headlines.length) return r;
+                    
+                    const temp = headlines[index];
+                    headlines[index] = headlines[targetIndex];
+                    headlines[targetIndex] = temp;
+                    
+                    return { ...r, headlines };
+                }));
+            };
+
             const toggleRassegna = (id) => {
                 if (id === 'generale') return;
                 setExpandedRassegne(prev => ({ ...prev, [id]: !prev[id] }));
@@ -1174,6 +1239,8 @@
                                                             onTouchMove={handleTouchMove}
                                                             onTouchEnd={handleTouchEnd}
                                                             isDragging={draggedIndex === i && draggedRassegnaId === 'generale'}
+                                                            onMove={(direction) => moveHeadline('generale', i, direction)}
+                                                            totalCount={generaleRassegna.headlines.length}
                                                         />
                                                     ))
                                                 ) : (
@@ -1277,6 +1344,8 @@
                                                                 onTouchMove={handleTouchMove}
                                                                 onTouchEnd={handleTouchEnd}
                                                                 isDragging={draggedIndex === i && draggedRassegnaId === rassegna.id}
+                                                                onMove={(direction) => moveHeadline(rassegna.id, i, direction)}
+                                                                totalCount={rassegna.headlines.length}
                                                             />
                                                         ))
                                                     ) : (
